@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آرشیو جامع عملیات کربلای 5 - چندرسانه‌ای</title>
+    <style>
+        /* تعریف متغیرهای CSS برای رنگ‌ها جهت استفاده آسان‌تر و تغییرات یکپارچه */
+        :root {
+            --primary-color: #007bff; /* رنگ اصلی: آبی */
+            --secondary-color: #343a40; /* رنگ ثانویه: خاکستری تیره */
+            --text-color: #495057; /* رنگ متن: خاکستری متوسط */
+            --background-light: #f8f9fa; /* رنگ پس‌زمینه روشن */
+            --card-background: white; /* رنگ پس‌زمینه کارت‌ها */
+            --border-color: #dee2e6; /* رنگ حاشیه */
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif; /* فونت اصلی صفحه */
+            line-height: 1.8; /* فاصله خطوط برای خوانایی بهتر */
+            max-width: 1200px; /* حداکثر عرض محتوا برای جلوگیری از کشیدگی بیش از حد */
+            margin: 0 auto; /* تراز کردن محتوا در مرکز صفحه */
+            padding: 20px; /* فاصله داخلی از لبه‌های صفحه */
+            background: var(--background-light); /* رنگ پس‌زمینه */
+            color: var(--secondary-color); /* رنگ متن اصلی */
+        }
+        h1, h2, h3 {
+            color: var(--primary-color); /* رنگ عناوین */
+        }
+        h1 {
+            text-align: center; /* تراز عنوان اصلی در مرکز */
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary-color); /* خط زیر عنوان اصلی */
+            margin-bottom: 30px;
+        }
+        h2 {
+            border-right: 4px solid var(--primary-color); /* خط آبی در سمت راست عناوین بخش‌ها */
+            padding-right: 15px;
+            margin-top: 30px;
+        }
+        /* استایل‌های مربوط به نوار تب‌ها */
+        .tab-container {
+            display: flex; /* نمایش دکمه‌های تب به صورت افقی */
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color); /* خط زیر تب‌ها */
+            flex-wrap: wrap; /* اجازه شکستن خط در صفحات کوچک */
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            background: #e9ecef; /* رنگ پس‌زمینه دکمه‌های غیرفعال */
+            border: none;
+            cursor: pointer; /* نشانگر ماوس به شکل دست */
+            font-weight: bold;
+            transition: all 0.3s; /* انیمیشن نرم برای تغییرات */
+            border-radius: 5px 5px 0 0; /* گوشه‌های گرد در بالا */
+            margin-left: 5px; /* فاصله بین دکمه‌ها */
+            color: var(--secondary-color);
+        }
+        .tab-btn.active {
+            background: var(--primary-color); /* رنگ پس‌زمینه دکمه فعال */
+            color: white; /* رنگ متن دکمه فعال */
+        }
+        /* استایل‌های محتوای تب‌ها */
+        .tab-content {
+            display: none; /* به صورت پیش‌فرض مخفی */
+            padding: 20px;
+            background: var(--card-background); /* پس‌زمینه سفید */
+            border-radius: 0 0 8px 8px; /* گوشه‌های گرد در پایین */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* سایه برای جلوه عمق */
+        }
+        .tab-content.active {
+            display: block; /* نمایش محتوای تب فعال */
+        }
+        /* استایل‌های گرید برای نمایش رسانه‌ها (ویدئوها و اسناد) */
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* چیدمان ریسپانسیو گرید */
+            gap: 20px; /* فاصله بین آیتم‌های گرید */
+            margin-top: 20px;
+        }
+        .media-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden; /* مخفی کردن محتوای بیرون زده */
+            transition: transform 0.3s; /* انیمیشن برای هاور */
+        }
+        .media-card:hover {
+            transform: translateY(-5px); /* کمی بالا رفتن در هاور */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* سایه بیشتر در هاور */
+        }
+        .media-thumbnail {
+            width: 100%;
+            height: 200px; /* ارتفاع ثابت برای تصاویر بندانگشتی */
+            object-fit: cover; /* حفظ نسبت تصویر و پوشش کامل فضا */
+        }
+        .media-info {
+            padding: 15px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none; /* حذف خط زیر لینک */
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background: #0056b3; /* تغییر رنگ دکمه در هاور */
+        }
+        /* استایل‌های بخش شرح عملیات */
+        .operation-description {
+            background: var(--card-background);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 30px 0;
+            line-height: 2; /* فاصله خطوط بیشتر برای خوانایی متن طولانی */
+            color: var(--text-color);
+            text-align: justify; /* تراز متن به صورت justify */
+        }
+        .operation-description h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        /* استایل‌های بخش خاطرات فرماندهان */
+        .commanders-section {
+            margin-top: 40px;
+        }
+        .commander-videos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        /* استایل‌های خط قرمز و اطلاعات مجموعه */
+        .red-line {
+            border-top: 10px solid #dc3545; /* رنگ قرمز برای خط */
+            margin: 8px 0;
+            width: 100%;
+        }
+        .collection-info {
+            background-color: #ffc107; /* رنگ زرد */
+            padding: 2px;
+            border-radius: 5px;
+            margin: 2px 0;
+            text-align: center;
+            font-size: 20px;
+            color: var(--secondary-color);
+        }
+
+        /* استایل‌های گالری عکس */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .gallery-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.5s;
+        }
+        .gallery-image:hover {
+            transform: scale(1.05);
+        }
+        .gallery-caption {
+            padding: 15px;
+            background: #f8f9fa;
+            text-align: center;
+            font-size: 14px;
+            color: var(--secondary-color);
+        }
+        /* استایل مودال (پنجره پاپ‌آپ برای نمایش بزرگ عکس) */
+        .modal {
+            display: none; /* به صورت پیش‌فرض مخفی */
+            position: fixed; /* ثابت در صفحه */
+            z-index: 1000; /* بالاترین لایه */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9); /* پس‌زمینه نیمه‌شفاف سیاه */
+            overflow: auto; /* اسکرول در صورت نیاز */
+        }
+        .modal-content {
+            display: block;
+            margin: 50px auto; /* تراز در مرکز با فاصله از بالا و پایین */
+            max-width: 80%; /* حداکثر عرض عکس در مودال */
+            max-height: 80%; /* حداکثر ارتفاع عکس در مودال */
+        }
+        #caption {
+            margin: 15px auto;
+            width: 80%;
+            text-align: center;
+            color: #fff; /* رنگ متن توضیحات عکس در مودال */
+            font-size: 16px;
+        }
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #fff;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* استایل‌های بخش خاطرات */
+        .memories-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .memory-card {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .memory-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        .memory-card h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        .memory-content p {
+            font-size: 0.95em;
+            line-height: 1.7;
+            color: var(--text-color);
+            text-align: justify;
+        }
+        .memory-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 0.85em;
+            color: #777;
+        }
+        .memory-author {
+            font-weight: bold;
+        }
+
+        /* استایل‌های بخش کد QR */
+        .qr-code-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            background-color: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .qr-code-container h2 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        #qrcode {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        .qr-code-text {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: var(--text-color);
+            text-align: center;
+        }
+
+
+        /* ریسپانسیو کردن طرح‌بندی برای دستگاه‌های کوچکتر */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .tab-btn {
+                width: 100%; /* دکمه‌های تب در موبایل تمام عرض را بگیرند */
+                margin-bottom: 5px;
+                border-radius: 5px; /* گوشه‌های گرد کامل */
+            }
+            .media-grid, .commander-videos, .gallery-grid, .memories-container {
+                grid-template-columns: 1fr; /* یک ستون در موبایل */
+            }
+            .modal-content {
+                max-width: 95%;
+                max-height: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>عملیات کربلای 5 (نبرد شلمچه)</h1>
+    
+    <div class="collection-info">
+        این مجموعه به یادبود و پاسداشت حماسه آفرینی رزمندگان در عملیات کربلای 5 گردآوری شده است.
+    </div>
+    
+    <div class="red-line"></div>
+    
+    <!-- تب‌های تعاملی با ترتیب جدید -->
+    <div class="tab-container">
+        <button class="tab-btn active" onclick="openTab(event, 'description')">شرح عملیات</button>
+        <button class="tab-btn" onclick="openTab(event, 'videos')">ویدئوها</button>
+        <button class="tab-btn" onclick="openTab(event, 'gallery')">گالری عکس</button>
+        <button class="tab-btn" onclick="openTab(event, 'documents')">اسناد</button>
+        <button class="tab-btn" onclick="openTab(event, 'memories')">خاطرات</button>
+        <button class="tab-btn" onclick="openTab(event, 'qr-code')">کد QR</button> <!-- تب جدید برای کد QR -->
+    </div>
+
+    <!-- محتوای تب شرح عملیات (تب اول) -->
+    <div id="description" class="tab-content active">
+        <div class="operation-description">
+            <h3>شرح کامل عملیات کربلای 5</h3>
+            <p>
+                عملیات کربلای 5، یکی از بزرگترین و سرنوشت‌سازترین عملیات‌های هشت سال دفاع مقدس بود که در تاریخ 19 دی ماه 1365 در منطقه شرق بصره، شامل دشت شلمچه و کانال ماهی، با رمز «یا زهرا (س)» توسط سپاه پاسداران انقلاب اسلامی آغاز شد. این عملیات پس از ناکامی نسبی در عملیات کربلای 4 و به منظور جبران آن و ایجاد فشار حداکثری بر رژیم بعث عراق، به سرعت طرح‌ریزی و اجرا گردید.
+            </p>
+            <p>
+                این عملیات به دلیل حجم گسترده آتش توپخانه، مقاومت شدید و بی‌سابقه دشمن، و درگیری‌های تن به تن و خانه به خانه در مواضع مستحکم عراق، به یکی از خونین‌ترین و حماسی‌ترین نبردهای جنگ ایران و عراق تبدیل شد. رزمندگان اسلام در این عملیات با عبور از موانع پیچیده و دژهای نفوذناپذیر دشمن، از جمله خطوط پنج‌گانه دفاعی شلمچه و دریاچه ماهی، توانستند به عمق مواضع دشمن نفوذ کنند.
+            </p>
+            <h4>اهداف و اهمیت استراتژیک عملیات:</h4>
+            <ul>
+                <li>**تصرف شلمچه و تهدید بصره:** هدف اصلی، تهدید شهر بصره، دومین شهر بزرگ عراق، و قطع شریان‌های حیاتی دشمن بود.</li>
+                <li>**انهدام ماشین جنگی دشمن:** وارد آوردن تلفات و خسارات سنگین به یگان‌ها و تجهیزات ارتش بعث عراق.</li>
+                <li>**تغییر موازنه جنگ:** ایجاد برتری نظامی و سیاسی برای ایران در مذاکرات احتمالی صلح و پایان جنگ.</li>
+                <li>**آزاد سازی مناطق اشغالی:** پس گرفتن بخش‌های مهمی از خاک میهن در منطقه شلمچه.</li>
+            </ul>
+            <h4>روند عملیات و چالش‌ها:</h4>
+            <p>
+                عملیات کربلای 5 در شرایطی بسیار دشوار و با وجود استحکامات بی‌نظیر دشمن آغاز شد. خطوط دفاعی عراق شامل میادین مین وسیع، سیم‌خاردار، کانال‌های آب، خاکریزهای متعدد و سنگرهای بتنی بود. رزمندگان با ایثار و از خودگذشتگی بی‌نظیر، از معبرهای آبی و خاکی عبور کرده و در نبردهای شدید و نفس‌گیر، مواضع دشمن را یکی پس از دیگری فتح کردند. نبرد در "کانال ماهی" و "پنج ضلعی" شلمچه از نقاط اوج این عملیات بود که مقاومت بی‌نظیر رزمندگان ایرانی را به نمایش گذاشت.
+            </p>
+            <h4>نتایج و دستاوردها:</h4>
+            <p>
+                این عملیات با وجود شهادت و مجروحیت تعداد زیادی از رزمندگان ایرانی، دستاوردهای مهمی را به همراه داشت. از جمله: آزادسازی بخش‌هایی از شلمچه، وارد آوردن ضربات مهلک به ماشین جنگی عراق (بیش از 80 تیپ و گردان دشمن منهدم یا آسیب جدی دیدند)، و به اسارت درآوردن تعداد قابل توجهی از نیروهای دشمن. کربلای 5 نه تنها از نظر نظامی یک پیروزی بزرگ محسوب می‌شد، بلکه از نظر سیاسی نیز باعث شد تا مجامع بین‌المللی به طور جدی‌تری به مسئله جنگ ایران و عراق بپردازند و قطعنامه 598 شورای امنیت سازمان ملل نیز تحت تأثیر نتایج این عملیات قرار گرفت. این عملیات نشان‌دهنده اوج ایثار، مقاومت و توانایی‌های نظامی ایران در برابر یک دشمن تا بن دندان مسلح بود و نقش مهمی در پایان جنگ ایفا کرد.
+            </p>
+        </div>
+    </div>
+
+    <!-- محتوای تب ویدئوها (تب دوم) -->
+    <div id="videos" class="tab-content">
+        <h2>مستندات ویدیویی عملیات کربلای 5</h2>
+        <div class="media-grid">
+            <div class="media-card">
+                <iframe class="media-thumbnail" src="https://www.aparat.com/video/video/embed/videohash/num7bpa/vt/frame" frameborder="0" allowfullscreen></iframe>
+                <div class="media-info">
+                    <h3>عملیات کربلای 5 بصورت مصور و مستند</h3>
+                    <p>روایتی جذاب و مستند از جزئیات عملیات کربلای 5.</p>
+                    <a href="https://www.aparat.com/v/num7bpa" class="btn">تماشا در آپارات</a>
+                </div>
+            </div>
+            <div class="media-card">
+                <iframe class="media-thumbnail" src="https://www.aparat.com/video/video/embed/videohash/dcm2f4b/vt/frame" frameborder="0" allowfullscreen></iframe>
+                <div class="media-info">
+                    <h3>مستند کربلای 5 / نبرد شلمچه</h3>
+                    <p>پیروزی عظیم لشکر اسلام در جنگ تحمیلی و پایان جنگ.</p>
+                    <a href="https://www.aparat.com/v/dcm2f4b" class="btn">تماشا در آپارات</a>
+                </div>
+            </div>
+            <div class="media-card">
+                <iframe class="media-thumbnail" src="https://www.aparat.com/video/video/embed/videohash/w21qmai/vt/frame" frameborder="0" allowfullscreen></iframe>
+                <div class="media-info">
+                    <h3>نبرد شلمچه - عملیات کربلای 5</h3>
+                    <p>تصاویر و روایتی از یکی از خونین‌ترین نبردهای دفاع مقدس.</p>
+                    <a href="https://www.aparat.com/v/w21qmai" class="btn">تماشا در آپارات</a>
+                </div>
+            </div>
+            <div class="media-card">
+                <iframe class="media-thumbnail" src="https://www.aparat.com/video/video/embed/videohash/vsz7c7b/vt/frame" frameborder="0" allowfullscreen></iframe>
+                <div class="media-info">
+                    <h3>مصاحبه با اسرای عراقی در کربلای 5</h3>
+                    <p>گفت‌وگو با یکی از اسرای عراقی در منطقه عملیات کربلای 5.</p>
+                    <a href="https://www.aparat.com/v/vsz7c7b" class="btn">تماشا در آپارات</a>
+                </div>
+            </div>
+            <div class="media-card">
+                <iframe class="media-thumbnail" src="https://www.aparat.com/video/video/embed/videohash/93xNa/vt/frame" frameborder="0" allowfullscreen></iframe>
+                <div class="media-info">
+                    <h3>شلمچه، عملیات کربلای 5 (مصاحبه با رزمندگان)</h3>
+                    <p>روایت‌های کمتر دیده شده از رزمندگان حاضر در شلمچه.</p>
+                    <a href="https://www.aparat.com/v/93xNa" class="btn">تماشا در آپارات</a>
+                </div>
+            </div>
+            <div class="media-card">
+                <iframe class="media-thumbnail" src="https://www.aparat.com/video/video/embed/videohash/q54h666/vt/frame" frameborder="0" allowfullscreen></iframe>
+                <div class="media-info">
+                    <h3>تصاویری از رزمندگان عملیات کربلای 5</h3>
+                    <p>تصاویری از منطقه عملیاتی و حین اجرای عملیات کربلای 5.</p>
+                    <a href="https://www.aparat.com/v/q54h666" class="btn">تماشا در آپارات</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="commanders-section">
+            <h2>خاطرات فرماندهان (ویدیویی)</h2>
+            <div class="commander-videos">
+                <div class="media-card">
+                    <iframe class="media-thumbnail" src="https://www.aparat.com/video/video/embed/videohash/e68l669/vt/frame" frameborder="0" allowfullscreen></iframe>
+                    <div class="media-info">
+                        <h3>خاطرات رزمندگان در دفاع مقدس- عملیات کربلای 5</h3>
+                        <p>روایت‌های شفاهی از لحظات حماسی کربلای 5.</p>
+                        <a href="https://www.aparat.com/v/e68l669" class="btn">تماشا در آپارات</a>
+                    </div>
+                </div>
+                <div class="media-card">
+                    <iframe class="media-thumbnail" src="https://www.aparat.com/video/video/embed/videohash/o77hz9e/vt/frame" frameborder="0" allowfullscreen></iframe>
+                    <div class="media-info">
+                        <h3>ناگفته‌هایی از دل یک عملیات سرنوشت‌ساز به روایت سردار دلها</h3>
+                        <p>نقش سپهبد شهید قاسم سلیمانی در عملیات کربلای 5.</p>
+                        <a href="https://www.aparat.com/v/o77hz9e" class="btn">تماشا در آپارات</a>
+                    </div>
+                </div>
+                <!-- می‌توانید ویدئوهای بیشتری از خاطرات فرماندهان اضافه کنید -->
+            </div>
+        </div>
+    </div>
+
+    <!-- محتوای تب گالری عکس (تب سوم) -->
+    <div id="gallery" class="tab-content">
+        <h2>گالری تصاویر عملیات کربلای 5</h2>
+        
+        <div class="gallery-grid">
+            <!-- عکس 1: رزمندگان در شلمچه -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/600x400/007bff/ffffff?text=رزمندگان+در+شلمچه" alt="رزمندگان ایرانی در منطقه عملیاتی شلمچه" class="gallery-image">
+                <div class="gallery-caption">رزمندگان ایرانی در خطوط مقدم شلمچه</div>
+            </div>
+            
+            <!-- عکس 2: عبور از کانال ماهی -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/600x400/007bff/ffffff?text=عبور+از+کانال+ماهی" alt="عبور رزمندگان از کانال ماهی در عملیات کربلای 5" class="gallery-image">
+                <div class="gallery-caption">عبور حماسی رزمندگان از کانال ماهی</div>
+            </div>
+            
+            <!-- عکس 3: سنگرهای بتنی دشمن -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/600x400/007bff/ffffff?text=سنگرهای+دشمن" alt="سنگرهای بتنی و استحکامات دشمن در شلمچه" class="gallery-image">
+                <div class="gallery-caption">مواضع مستحکم و سنگرهای بتنی دشمن</div>
+            </div>
+            
+            <!-- عکس 4: فرماندهان در اتاق جنگ -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/600x400/007bff/ffffff?text=فرماندهان+جنگ" alt="فرماندهان عملیات کربلای 5 در حال بررسی نقشه" class="gallery-image">
+                <div class="gallery-caption">فرماندهان در حال برنامه‌ریزی عملیات</div>
+            </div>
+            
+            <!-- عکس 5: تجهیزات منهدم شده -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/600x400/007bff/ffffff?text=تجهیزات+منهدم+شده" alt="تجهیزات نظامی منهدم شده دشمن پس از نبرد" class="gallery-image">
+                <div class="gallery-caption">بقایای تجهیزات منهدم شده ارتش بعث</div>
+            </div>
+            
+            <!-- عکس 6: لحظات ایثار و فداکاری -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/600x400/007bff/ffffff?text=ایثار+و+فداکاری" alt="صحنه‌های ایثار و فداکاری رزمندگان در خط مقدم" class="gallery-image">
+                <div class="gallery-caption">لحظات ناب ایثار و فداکاری رزمندگان</div>
+            </div>
+
+            <!-- عکس 7: مجروحان و امدادرسانی -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/600x400/007bff/ffffff?text=امدادرسانی+مجروحان" alt="امدادرسانی به مجروحان در منطقه عملیاتی" class="gallery-image">
+                <div class="gallery-caption">امدادرسانی به مجروحان در خطوط عملیاتی</div>
+            </div>
+
+            <!-- عکس 8: اسرای عراقی -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/600x400/007bff/ffffff?text=اسرای+عراقی" alt="تصویری از اسرای عراقی پس از عملیات" class="gallery-image">
+                <div class="gallery-caption">اسرای عراقی پس از نبرد در شلمچه</div>
+            </div>
+
+            <!-- عکس 9: پرچم ایران بر فراز شلمچه -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/600x400/007bff/ffffff?text=پرچم+ایران+شلمچه" alt="پرچم جمهوری اسلامی ایران بر فراز مناطق آزاد شده شلمچه" class="gallery-image">
+                <div class="gallery-caption">به اهتزاز درآمدن پرچم ایران در شلمچه</div>
+            </div>
+
+            <!-- عکس 10: پانوراما از منطقه -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/900x300/007bff/ffffff?text=پانوراما+شلمچه" alt="عکس پانوراما از منطقه عملیاتی شلمچه" class="gallery-image">
+                <div class="gallery-caption">نمایی پانوراما از منطقه عملیاتی شلمچه</div>
+            </div>
+        </div>
+        
+        <!-- مودال برای نمایش بزرگ عکس -->
+        <div id="imageModal" class="modal">
+            <span class="close">×</span>
+            <img class="modal-content" id="modalImage">
+            <div id="caption"></div>
+        </div>
+    </div>
+
+    <!-- محتوای تب اسناد (تب چهارم) -->
+    <div id="documents" class="tab-content">
+        <h2>اسناد و ارائه‌های مرتبط با عملیات کربلای 5</h2>
+        <div class="media-grid">
+            <!-- سند ۱: گزارش اطلاعاتی -->
+            <div class="media-card">
+                <img src="https://placehold.co/300x200/007bff/ffffff?text=سند+اطلاعاتی" alt="تصویر بندانگشتی سند گزارش اطلاعاتی" class="media-thumbnail">
+                <div class="media-info">
+                    <h3>گزارش‌های اطلاعاتی پیش از عملیات</h3>
+                    <p>بررسی وضعیت نیروها و استحکامات دشمن در منطقه شرق بصره.</p>
+                    <a href="#" class="btn">دانلود PDF</a>
+                </div>
+            </div>
+            
+            <!-- سند ۲: نقشه عملیاتی -->
+            <div class="media-card">
+                <img src="https://placehold.co/300x200/007bff/ffffff?text=سند+نقشه+عملیاتی" alt="تصویر بندانگشتی نقشه عملیاتی کربلای 5" class="media-thumbnail">
+                <div class="media-info">
+                    <h3>نقشه عملیاتی دقیق کربلای 5</h3>
+                    <p>نقشه کامل عملیات با جزئیات محورهای پیشروی و مواضع دشمن.</p>
+                    <a href="#" class="btn">دانلود نقشه</a>
+                </div>
+            </div>
+            
+            <!-- سند ۳: دستورالعمل‌های فرماندهی -->
+            <div class="media-card">
+                <img src="https://placehold.co/300x200/007bff/ffffff?text=سند+دستورالعمل" alt="تصویر بندانگشتی سند دستورالعمل‌های فرماندهی" class="media-thumbnail">
+                <div class="media-info">
+                    <h3>دستورالعمل‌ها و پیام‌های فرماندهی</h3>
+                    <p>مجموعه‌ای از پیام‌ها و دستورات صادر شده در طول عملیات کربلای 5.</p>
+                    <a href="#" class="btn">دانلود مجموعه</a>
+                </div>
+            </div>
+
+            <!-- سند ۴: تحلیل نظامی عملیات -->
+            <div class="media-card">
+                <img src="https://placehold.co/300x200/007bff/ffffff?text=سند+تحلیل+نظامی" alt="تصویر بندانگشتی سند تحلیل نظامی عملیات کربلای 5" class="media-thumbnail">
+                <div class="media-info">
+                    <h3>تحلیل نظامی عملیات کربلای 5</h3>
+                    <p>بررسی تاکتیک‌ها، استراتژی‌ها و دستاوردهای نظامی عملیات.</p>
+                    <a href="#" class="btn">دانلود PDF</a>
+                </div>
+            </div>
+
+            <!-- سند ۵: گزارش‌های نوبه‌ای -->
+            <div class="media-card">
+                <img src="https://placehold.co/300x200/007bff/ffffff?text=سند+گزارش+نوبه‌ای" alt="تصویر بندانگشتی سند گزارش‌های نوبه‌ای" class="media-thumbnail">
+                <div class="media-info">
+                    <h3>گزارش‌های نوبه‌ای قرارگاه‌ها</h3>
+                    <p>خلاصه‌ای از گزارش‌های روزانه و هفتگی قرارگاه‌های عملیاتی.</p>
+                    <a href="#" class="btn">دانلود گزارش‌ها</a>
+                </div>
+            </div>
+
+            <!-- سند ۶: اسناد مربوط به قطعنامه 598 -->
+            <div class="media-card">
+                <img src="https://placehold.co/300x200/007bff/ffffff?text=سند+قطعنامه" alt="تصویر بندانگشتی اسناد مربوط به قطعنامه 598" class="media-thumbnail">
+                <div class="media-info">
+                    <h3>اسناد مرتبط با قطعنامه 598</h3>
+                    <p>بررسی تأثیر عملیات کربلای 5 بر تصویب قطعنامه 598 سازمان ملل.</p>
+                    <a href="#" class="btn">دانلود اسناد</a>
+                </div>
+            </div>
+        </div>
+        <p class="note" style="text-align: right; margin-top: 20px; color: #dc3545; font-size: 0.9em;">
+            **توجه:** لینک‌های دانلود اسناد صرفاً نمونه هستند و به فایل‌های واقعی اشاره نمی‌کنند. لطفاً لینک‌های واقعی به اسناد معتبر و عمومی را جایگزین کنید.
+        </p>
+    </div>
+
+    <!-- محتوای تب خاطرات (تب پنجم) -->
+    <div id="memories" class="tab-content">
+        <h2>خاطرات رزمندگان و ایثارگران عملیات کربلای 5</h2>
+        <div class="memories-container">
+            <!-- خاطره 1: شب عملیات و عبور از موانع -->
+            <div class="memory-card">
+                <h3>شب عملیات و عبور از موانع</h3>
+                <div class="memory-content">
+                    <p>"شب عملیات کربلای 5، هوا به شدت سرد بود و باران نم‌نم می‌بارید. وقتی به خط رسیدیم، حجم موانع دشمن باورنکردنی بود: میادین مین، سیم‌خاردارهای حلقوی، و کانال‌های پر از آب. اما بچه‌ها با ذکر یا زهرا (س) و با اراده‌ای پولادین، یکی پس از دیگری از موانع عبور می‌کردند. صدای انفجارها و تیراندازی‌ها قطع نمی‌شد، اما هیچ‌کس توقف نمی‌کرد. آن شب، شب ایمان و اراده بود."</p>
+                    <div class="memory-footer">
+                        <span class="memory-author">رزمنده علی حسینی، گردان خط‌شکن</span>
+                        <span class="memory-date">دی 1365</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- خاطره 2: نبرد در پنج‌ضلعی شلمچه -->
+            <div class="memory-card">
+                <h3>نبرد نفس‌گیر در پنج‌ضلعی شلمچه</h3>
+                <div class="memory-content">
+                    <p>"پنج‌ضلعی شلمچه، جهنمی بود که عراقی‌ها ساخته بودند. هر وجب آن با خون شهیدان آبیاری شد. درگیری‌ها تن به تن بود و هر سنگر چندین بار دست به دست می‌شد. یادم هست که مهماتمان تمام شده بود، اما بچه‌ها با سرنیزه و حتی سنگ به دشمن حمله می‌کردند. مقاومت بی‌نظیر رزمندگان در آنجا، درس ایثار و شهادت بود."</p>
+                    <div class="memory-footer">
+                        <span class="memory-author">جانباز محمدی، لشکر 19 فجر</span>
+                        <span class="memory-date">دی 1365</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- خاطره 3: نقش شهید خرازی -->
+            <div class="memory-card">
+                <h3>حضور شهید خرازی در خط مقدم</h3>
+                <div class="memory-content">
+                    <p>"شهید حسین خرازی، با وجود اینکه دستش قطع شده بود، همیشه در خط مقدم بود و با روحیه مثال‌زدنی‌اش به رزمندگان امید می‌داد. در یکی از سخت‌ترین لحظات کربلای 5، دیدم که خودش آرپی‌جی به دست گرفته و به سمت تانک‌های دشمن شلیک می‌کند. حضور او، برای ما قوت قلبی بود که هیچ چیز نمی‌توانست جای آن را بگیرد."</p>
+                    <div class="memory-footer">
+                        <span class="memory-author">یکی از همرزمان شهید خرازی</span>
+                        <span class="memory-date">دی 1365</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- خاطره 4: شهید سوداگر و جاده‌های سربی -->
+            <div class="memory-card">
+                <h3>روایت شهید سوداگر از جاده‌های سربی</h3>
+                <div class="memory-content">
+                    <p>"شهید احمد سوداگر در خاطراتش از کربلای 5 به «جاده‌های سربی» اشاره می‌کند؛ جاده‌هایی که لحظه‌ای از آتش دشمن در امان نبودند. او می‌گوید: 'امکان نداشت کسی از روی پل تا آخر سالم برود. با این حال بچه‌ها تا فردای آن روز مقاومت کردند و منطقه‌ی عملیات را حفظ کردند.' این روایت‌ها نشان از شدت نبرد و پایداری رزمندگان دارد."</p>
+                    <div class="memory-footer">
+                        <span class="memory-author">برگرفته از خاطرات شهید احمد سوداگر</span>
+                        <span class="memory-date">دی 1365</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- خاطره 5: امدادرسانی و شهادت امدادگران -->
+            <div class="memory-card">
+                <h3>ایثار امدادگران در کربلای 5</h3>
+                <div class="memory-content">
+                    <p>"به عنوان یک امدادگر، وظیفه ما رساندن مجروحان به پشت خط بود. در کربلای 5، حجم مجروحان بسیار زیاد بود و گاهی مجبور بودیم زیر آتش مستقیم دشمن کار کنیم. بسیاری از امدادگران خودشان شهید یا مجروح شدند. اما هیچ‌کس دست از کار نمی‌کشید، چون می‌دانستیم هر لحظه برای نجات جان یک رزمنده حیاتی است."</p>
+                    <div class="memory-footer">
+                        <span class="memory-author">امدادگر حاضر در عملیات</span>
+                        <span class="memory-date">دی 1365 - بهمن 1365</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- خاطره 6: تاثیر عملیات بر روحیه مردم -->
+            <div class="memory-card">
+                <h3>بازتاب عملیات در شهرهای ایران</h3>
+                <div class="memory-content">
+                    <p>"با وجود سختی‌ها و شهادت‌ها، خبر پیروزی‌های کربلای 5 در شلمچه، روحیه تازه‌ای به مردم در شهرهای ایران می‌بخشید. یادم هست که مردم برای کمک به جبهه، هر آنچه داشتند اهدا می‌کردند. این عملیات نشان داد که حتی با وجود کمبودها، اراده ملت ایران برای دفاع از کشور، شکست‌ناپذیر است."</p>
+                    <div class="memory-footer">
+                        <span class="memory-author">شاهد عینی از پشت جبهه</span>
+                        <span class="memory-date">دی 1365</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- محتوای تب کد QR (تب جدید) -->
+    <div id="qr-code" class="tab-content">
+        <div class="qr-code-container">
+            <h2>اسکن کد QR برای دسترسی به این صفحه</h2>
+            <div id="qrcode"></div> <!-- محلی برای نمایش کد QR -->
+            <p class="qr-code-text">
+                برای اینکه کد QR به این صفحه واقعی اشاره کند، لطفاً پس از میزبانی فایل HTML خود در Google Drive، لینک عمومی آن را در کد جاوا اسکریپت جایگذاری کنید.<br>
+                در حال حاضر، این کد QR به صفحه جستجوی گوگل برای "عملیات کربلای 5" اشاره می‌کند تا قابلیت آن را نشان دهد.
+            </p>
+        </div>
+    </div>
+
+    <!-- اسکریپت جاوا اسکریپت برای عملکرد تب‌ها و مودال عکس -->
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script> <!-- کتابخانه QRCode.js -->
+    <script>
+        // تابع openTab برای مدیریت نمایش و مخفی کردن محتوای تب‌ها
+        function openTab(evt, tabName) { 
+            var i, tabcontent, tablinks;
+            // ابتدا همه محتواهای تب را مخفی می‌کند
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            // سپس کلاس "active" را از همه دکمه‌های تب حذف می‌کند تا هیچ دکمه‌ای فعال نباشد
+            tablinks = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            // محتوای تب فعلی (بر اساس tabName) را نمایش می‌دهد
+            document.getElementById(tabName).style.display = "block";
+            // و کلاس "active" را به دکمه تب فعلی اضافه می‌کند تا ظاهر آن تغییر کند
+            evt.currentTarget.classList.add("active"); 
+            
+            // اگر تب کد QR فعال شد، کد QR را تولید کند
+            if (tabName === 'qr-code') {
+                generateQRCode();
+            }
+        }
+
+        // تابع برای تولید کد QR
+        function generateQRCode() {
+            var qrcodeContainer = document.getElementById("qrcode");
+            // اطمینان حاصل کنید که کانتینر خالی است تا کد QR قبلی حذف شود
+            qrcodeContainer.innerHTML = ''; 
+            
+            // **مهم:**
+            // پس از میزبانی فایل HTML خود در Google Drive، لینک عمومی آن را در متغیر زیر جایگذاری کنید.
+            // مثال: var qrCodeLink = "https://drive.google.com/file/d/YOUR_FILE_ID/view?usp=sharing";
+            // در حال حاضر، این لینک به یک جستجوی گوگل اشاره می‌کند تا قابلیت را نشان دهد.
+            var qrCodeLink = "https://drive.google.com/file/d/13Ej--HBzYGYDKefYaz_qHAz4uJNbYOqu/view?usp=sharing"; 
+
+            // ایجاد کد QR
+            new QRCode(qrcodeContainer, {
+                text: qrCodeLink, // استفاده از لینک عمومی که شما وارد می‌کنید
+                width: 256,
+                height: 256,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
+
+        // این بخش اطمینان می‌دهد که هنگام بارگذاری کامل صفحه، اولین تب به صورت پیش‌فرض فعال باشد
+        document.addEventListener("DOMContentLoaded", function() {
+            // شبیه‌سازی کلیک روی اولین دکمه تب برای فعال کردن آن
+            // برای شبیه‌سازی کلیک و ارسال رویداد، باید یک رویداد ساختگی ایجاد کنیم
+            const firstTabButton = document.querySelector(".tab-btn");
+            if (firstTabButton) {
+                const clickEvent = new Event('click');
+                firstTabButton.dispatchEvent(clickEvent);
+            }
+
+            // اسکریپت برای نمایش مودال عکس
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const captionText = document.getElementById('caption');
+            const closeBtn = document.getElementsByClassName('close')[0];
+            
+            // گرفتن تمام عکس‌های گالری
+            const galleryImages = document.querySelectorAll('.gallery-image');
+            
+            galleryImages.forEach(img => {
+                img.addEventListener('click', function() {
+                    modal.style.display = 'block';
+                    modalImg.src = this.src;
+                    captionText.innerHTML = this.nextElementSibling.innerHTML; // گرفتن کپشن از div بعدی
+                });
+            });
+            
+            // بستن مودال با کلیک روی دکمه بستن
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            // بستن مودال با کلیک خارج از عکس (روی پس‌زمینه مودال)
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
